@@ -1,4 +1,4 @@
-package com.aditya.drawsync
+package com.aditya.drawsync.data
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -7,25 +7,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.NetworkInfo
 import android.net.wifi.p2p.WifiP2pDevice
-import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
-
-interface WiFiDirectActionListener : WifiP2pManager.ChannelListener {
-    fun wifiP2pEnabled(enabled: Boolean)
-
-    fun onConnectionInfoAvailable(wifiP2pInfo: WifiP2pInfo)
-
-    fun onDisconnection()
-
-    fun onSelfDeviceAvailable(wifiP2pDevice: WifiP2pDevice)
-
-    fun onPeersAvailable(wifiP2pDeviceList: Collection<WifiP2pDevice>)
-}
 
 class WiFiDirectBroadcastReceiver(
     private val manager: WifiP2pManager,
     private val channel: WifiP2pManager.Channel,
-    private val activity: ConnectActivity,
     private val wiFiDirectActionListener: WiFiDirectActionListener
 ) : BroadcastReceiver() {
 
@@ -47,8 +33,7 @@ class WiFiDirectBroadcastReceiver(
 
                 WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION -> {
                     val enabled = intent.getIntExtra(
-                        WifiP2pManager.EXTRA_WIFI_STATE,
-                        -1
+                        WifiP2pManager.EXTRA_WIFI_STATE, -1
                     ) == WifiP2pManager.WIFI_P2P_STATE_ENABLED
 
                     wiFiDirectActionListener.wifiP2pEnabled(enabled)
